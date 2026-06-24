@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using CleanMovie.Core.Models.DTOs;
-namespace CleanMovie.Core.Models;
+using CleanMovie.Core.Entities.DTOs;
+namespace CleanMovie.Core.Entities;
 
 
 public class Actor

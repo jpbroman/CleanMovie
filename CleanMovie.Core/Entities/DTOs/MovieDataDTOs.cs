@@ -1,4 +1,4 @@
-namespace CleanMovie.Core.Models.DTOs;
+namespace CleanMovie.Core.Entities.DTOs;
 
 public record MovieDto(
     int Id,

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using CleanMovie.Core.Interfaces;
-using CleanMovie.Core.Models;
+using CleanMovie.Core.Entities;
 
 namespace CleanMovie.API.Controllers;
 

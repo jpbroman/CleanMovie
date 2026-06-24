@@ -1,4 +1,4 @@
-using CleanMovie.Core.Models;
+using CleanMovie.Core.Entities;
 namespace CleanMovie.Core.DomainContracts;
 
 public interface IMovieRepository

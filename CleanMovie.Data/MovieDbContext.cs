@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using CleanMovie.Core.Models;
+using CleanMovie.Core.Entities;
 using CleanMovie.Core.Interfaces;
 
 namespace CleanMovie.Data;

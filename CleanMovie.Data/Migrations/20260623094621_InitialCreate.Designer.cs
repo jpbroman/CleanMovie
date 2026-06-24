@@ -20,7 +20,7 @@ namespace CleanMovie.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.9");
 
-            modelBuilder.Entity("CleanMovie.Core.Models.Actor", b =>
+            modelBuilder.Entity("CleanMovie.Core.Entities.Actor", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -38,7 +38,7 @@ namespace CleanMovie.Data.Migrations
                     b.ToTable("Actors");
                 });
 
-            modelBuilder.Entity("CleanMovie.Core.Models.Movie", b =>
+            modelBuilder.Entity("CleanMovie.Core.Entities.Movie", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -63,7 +63,7 @@ namespace CleanMovie.Data.Migrations
                     b.ToTable("Movies");
                 });
 
-            modelBuilder.Entity("CleanMovie.Core.Models.MovieActor", b =>
+            modelBuilder.Entity("CleanMovie.Core.Entities.MovieActor", b =>
                 {
                     b.Property<int>("MovieId")
                         .HasColumnType("INTEGER");
@@ -78,7 +78,7 @@ namespace CleanMovie.Data.Migrations
                     b.ToTable("MovieActors");
                 });
 
-            modelBuilder.Entity("CleanMovie.Core.Models.MovieDetails", b =>
+            modelBuilder.Entity("CleanMovie.Core.Entities.MovieDetails", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -106,7 +106,7 @@ namespace CleanMovie.Data.Migrations
                     b.ToTable("MovieDetails");
                 });
 
-            modelBuilder.Entity("CleanMovie.Core.Models.Review", b =>
+            modelBuilder.Entity("CleanMovie.Core.Entities.Review", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -133,15 +133,15 @@ namespace CleanMovie.Data.Migrations
                     b.ToTable("Reviews");
                 });
 
-            modelBuilder.Entity("CleanMovie.Core.Models.MovieActor", b =>
+            modelBuilder.Entity("CleanMovie.Core.Entities.MovieActor", b =>
                 {
-                    b.HasOne("CleanMovie.Core.Models.Actor", "Actor")
+                    b.HasOne("CleanMovie.Core.Entities.Actor", "Actor")
                         .WithMany("MovieActors")
                         .HasForeignKey("ActorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CleanMovie.Core.Models.Movie", "Movie")
+                    b.HasOne("CleanMovie.Core.Entities.Movie", "Movie")
                         .WithMany("MovieActors")
                         .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -152,32 +152,32 @@ namespace CleanMovie.Data.Migrations
                     b.Navigation("Movie");
                 });
 
-            modelBuilder.Entity("CleanMovie.Core.Models.MovieDetails", b =>
+            modelBuilder.Entity("CleanMovie.Core.Entities.MovieDetails", b =>
                 {
-                    b.HasOne("CleanMovie.Core.Models.Movie", "Movie")
+                    b.HasOne("CleanMovie.Core.Entities.Movie", "Movie")
                         .WithOne("Details")
-                        .HasForeignKey("CleanMovie.Core.Models.MovieDetails", "MovieId")
+                        .HasForeignKey("CleanMovie.Core.Entities.MovieDetails", "MovieId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Movie");
                 });
 
-            modelBuilder.Entity("CleanMovie.Core.Models.Review", b =>
+            modelBuilder.Entity("CleanMovie.Core.Entities.Review", b =>
                 {
-                    b.HasOne("CleanMovie.Core.Models.Movie", null)
+                    b.HasOne("CleanMovie.Core.Entities.Movie", null)
                         .WithMany("Reviews")
                         .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("CleanMovie.Core.Models.Actor", b =>
+            modelBuilder.Entity("CleanMovie.Core.Entities.Actor", b =>
                 {
                     b.Navigation("MovieActors");
                 });
 
-            modelBuilder.Entity("CleanMovie.Core.Models.Movie", b =>
+            modelBuilder.Entity("CleanMovie.Core.Entities.Movie", b =>
                 {
                     b.Navigation("Details");
 

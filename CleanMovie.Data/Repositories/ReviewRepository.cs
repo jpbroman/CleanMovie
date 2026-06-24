@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using CleanMovie.Core.Interfaces;
-using CleanMovie.Core.Models;
+using CleanMovie.Core.Entities;
 
 namespace CleanMovie.Data.Repositories;
 

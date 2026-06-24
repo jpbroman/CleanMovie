@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using CleanMovie.Core.Interfaces;
 using CleanMovie.Core.DomainContracts;
-using CleanMovie.Core.Models;
-using CleanMovie.Core.Models.DTOs;
+using CleanMovie.Core.Entities;
+using CleanMovie.Core.Entities.DTOs;
 
 namespace CleanMovie.API.Controllers;
 

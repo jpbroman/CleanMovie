@@ -1,4 +1,4 @@
-namespace CleanMovie.Core.Models;
+namespace CleanMovie.Core.Entities;
 
 using System.Text.Json.Serialization;
 using System.ComponentModel.DataAnnotations;

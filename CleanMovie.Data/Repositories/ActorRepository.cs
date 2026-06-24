@@ -1,5 +1,5 @@
 using CleanMovie.Core.Interfaces;
-using CleanMovie.Core.Models;
+using CleanMovie.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 
 public class ActorRepository : IActorRepository

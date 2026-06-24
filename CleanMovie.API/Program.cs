@@ -57,7 +57,7 @@ using (var scope = app.Services.CreateScope())
     // Optional seed data
     if (!await context.Movies.AnyAsync())
     {
-        context.Movies.Add(new CleanMovie.Core.Models.Movie
+        context.Movies.Add(new CleanMovie.Core.Entities.Movie
         {
             Title = "The Matrix",
             Year = 1999,

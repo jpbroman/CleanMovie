@@ -1,4 +1,4 @@
-namespace CleanMovie.Core.Models;
+namespace CleanMovie.Core.Entities;
 public class Review
 {
     public int Id { get; set; }
