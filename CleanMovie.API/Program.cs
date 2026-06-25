@@ -17,12 +17,6 @@ builder.Services.AddDbContext<MovieDbContext>(options =>
     options.UseSqlite(
         builder.Configuration.GetConnectionString("DefaultConnection")));
 
-/*
-builder.Services.AddDbContext<MovieDbContext>(options =>
-    options.UseSqlite(
-        connectionString,
-        b => b.MigrationsAssembly("CleanMovie.Data")));
-*/
 // DbContext interface
 builder.Services.AddScoped<IMovieDbContext>(
     provider => provider.GetRequiredService<MovieDbContext>());
@@ -32,6 +26,9 @@ builder.Services.AddScoped<IMovieRepository, MovieRepository>();
 builder.Services.AddScoped<IActorRepository, ActorRepository>();
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 builder.Services.AddScoped<IMovieDetailsRepository, MovieDetailsRepository>();
+
+
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 // Controllers + JSON serialization
 builder.Services.AddControllers()
