@@ -20,6 +20,11 @@ public class MovieDbContext : DbContext, IMovieDbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Movie>()
+            .HasOne(m => m.Details)
+            .WithOne(d => d.Movie)
+            .HasForeignKey<MovieDetails>(d => d.MovieId);
+
         modelBuilder.Entity<MovieActor>()
             .HasKey(ma => new { ma.MovieId, ma.ActorId });
 
@@ -32,11 +37,6 @@ public class MovieDbContext : DbContext, IMovieDbContext
             .HasOne(ma => ma.Actor)
             .WithMany(a => a.MovieActors)
             .HasForeignKey(ma => ma.ActorId);
-
-        modelBuilder.Entity<Movie>()
-            .HasOne(m => m.Details)
-            .WithOne(d => d.Movie)
-            .HasForeignKey<MovieDetails>(d => d.MovieId);
         
         modelBuilder.Entity<Review>()
             .HasOne(r => r.Movie)

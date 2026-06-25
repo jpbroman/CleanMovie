@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="CleanMove.Service/CleanMove.Service.csproj" />
   <Project Path="CleanMovie.API/CleanMovie.API.csproj" />
   <Project Path="CleanMovie.Core/CleanMovie.Core.csproj" />
   <Project Path="CleanMovie.Data/CleanMovie.Data.csproj" />
