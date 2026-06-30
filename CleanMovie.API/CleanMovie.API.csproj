@@ -16,6 +16,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\CleanMovie.Data\CleanMovie.Data.csproj" />
+      <ProjectReference Include="..\CleanMovie.Service\CleanMovie.Service.csproj" />
     </ItemGroup>
 
 </Project>

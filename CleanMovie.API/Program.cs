@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using CleanMovie.Core.Interfaces;
 using CleanMovie.Core.DomainContracts;
 using CleanMovie.Data;
+using CleanMovie.Service;using CleanMovie.Service.Contracts;
 using CleanMovie.Data.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,11 +22,19 @@ builder.Services.AddDbContext<MovieDbContext>(options =>
 builder.Services.AddScoped<IMovieDbContext>(
     provider => provider.GetRequiredService<MovieDbContext>());
 
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+builder.Services.AddScoped<IMovieService, MovieService>();
+builder.Services.AddScoped<IActorService, ActorService>();
+builder.Services.AddScoped<IReviewService, ReviewService>();
+builder.Services.AddScoped<IMovieDetailService, MovieDetailService>();
+
+builder.Services.AddScoped<IServiceManager, ServiceManager>();
 // Repositories
-builder.Services.AddScoped<IMovieRepository, MovieRepository>();
-builder.Services.AddScoped<IActorRepository, ActorRepository>();
-builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
-builder.Services.AddScoped<IMovieDetailsRepository, MovieDetailsRepository>();
+// builder.Services.AddScoped<IMovieRepository, MovieRepository>();
+// builder.Services.AddScoped<IActorRepository, ActorRepository>();
+// builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+// builder.Services.AddScoped<IMovieDetailsRepository, MovieDetailsRepository>();
 
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
