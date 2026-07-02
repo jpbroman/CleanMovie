@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using CleanMovie.Core.Interfaces;
+using CleanMovie.Service.Contracts;
 using CleanMovie.Core.Entities;
 
 namespace CleanMovie.API.Controllers;
@@ -8,27 +8,23 @@ namespace CleanMovie.API.Controllers;
 [Route("api/[controller]")]
 public class ReviewsController : ControllerBase
 {
-    private readonly IReviewRepository _repository;
-    private readonly IMovieDbContext _context;
+    private readonly IServiceManager _services;
 
-    public ReviewsController(
-        IReviewRepository repository,
-        IMovieDbContext context)
+    public ReviewsController(IServiceManager services)
     {
-        _repository = repository;
-        _context = context;
+        _services = services;
     }
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Review>>> GetAll()
     {
-        return Ok(await _repository.GetAllAsync());
+        return Ok(await _services.Reviews.GetAllAsync());
     }
 
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Review>> Get(int id)
     {
-        var review = await _repository.GetAsync(id);
+        var review = await _services.Reviews.GetAsync(id);
 
         if (review is null)
             return NotFound();
@@ -39,28 +35,32 @@ public class ReviewsController : ControllerBase
     [HttpGet("movie/{movieId:int}")]
     public async Task<ActionResult<IEnumerable<Review>>> GetByMovie(int movieId)
     {
-        return Ok(await _repository.GetByMovieIdAsync(movieId));
+        return Ok(await _services.Reviews.GetByMovieAsync(movieId));
     }
 
     [HttpPost]
     public async Task<ActionResult<Review>> Create(Review review)
     {
-        await _repository.AddAsync(review);
-        await _context.SaveChangesAsync();
+        var created = await _services.Reviews.CreateAsync(review);
 
-        return CreatedAtAction(nameof(Get), new { id = review.Id }, review);
+        return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
+    }
+
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Update(int id, Review review)
+    {
+        if (id != review.Id)
+            return BadRequest();
+
+        await _services.Reviews.UpdateAsync(review);
+
+        return NoContent();
     }
 
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {
-        var review = await _repository.GetAsync(id);
-
-        if (review is null)
-            return NotFound();
-
-        _repository.Delete(review);
-        await _context.SaveChangesAsync();
+        await _services.Reviews.DeleteAsync(id);
 
         return NoContent();
     }

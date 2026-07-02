@@ -1,5 +1,6 @@
 using CleanMovie.Service.Contracts;
 using CleanMovie.Core.Entities;
+using CleanMovie.Core.Entities.DTOs;
 using CleanMovie.Core.DomainContracts;
 
 namespace CleanMovie.Service;
@@ -14,14 +15,46 @@ public class MovieService : IMovieService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<IEnumerable<Movie>> GetAllAsync()
+    private static MovieDto Map(Movie movie)
     {
-        return await _unitOfWork.Movies.GetAllAsync();
+        return new MovieDto(
+            movie.Id,
+            movie.Title,
+            movie.Year,
+            movie.Genre,
+            movie.Duration,
+            movie.Details is null
+                ? null
+                : new MovieDetailsDto(
+                    movie.Details.Synopsis,
+                    movie.Details.Language,
+                    movie.Details.Budget),
+            movie.MovieActors.Select(ma => new ActorDto(
+                ma.Actor.Id,
+                ma.Actor.Name,
+                ma.Actor.BirthDate)),
+            movie.Reviews.Select(r => new ReviewDto(
+                r.Id,
+                r.Reviewer,
+                r.Comment,
+                r.Rating))
+        );
     }
 
-    public async Task<Movie?> GetAsync(int id)
+    public async Task<IEnumerable<MovieDto>> GetAllAsync()
     {
-        return await _unitOfWork.Movies.GetAsync(id);
+        var movies = await _unitOfWork.Movies.GetAllAsync();
+
+        return movies.Select(Map);
+    }
+
+    public async Task<MovieDto?> GetAsync(int id)
+    {
+        var movie = await _unitOfWork.Movies.GetAsync(id);
+
+        return movie is null
+            ? null
+            : Map(movie);
     }
 
     public async Task<Movie> CreateAsync(Movie movie)

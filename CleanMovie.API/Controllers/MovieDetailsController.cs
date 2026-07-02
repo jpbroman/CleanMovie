@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using CleanMovie.Core.Interfaces;
+using CleanMovie.Service.Contracts;
 using CleanMovie.Core.Entities;
 
 namespace CleanMovie.API.Controllers;
@@ -8,27 +8,23 @@ namespace CleanMovie.API.Controllers;
 [Route("api/[controller]")]
 public class MovieDetailsController : ControllerBase
 {
-    private readonly IMovieDetailsRepository _repository;
-    private readonly IMovieDbContext _context;
+    private readonly IServiceManager _services;
 
-    public MovieDetailsController(
-        IMovieDetailsRepository repository,
-        IMovieDbContext context)
+    public MovieDetailsController(IServiceManager services)
     {
-        _repository = repository;
-        _context = context;
+        _services = services;
     }
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<MovieDetails>>> GetAll()
     {
-        return Ok(await _repository.GetAllAsync());
+        return Ok(await _services.MovieDetails.GetAllAsync());
     }
 
     [HttpGet("{id:int}")]
     public async Task<ActionResult<MovieDetails>> Get(int id)
     {
-        var details = await _repository.GetAsync(id);
+        var details = await _services.MovieDetails.GetAsync(id);
 
         if (details is null)
             return NotFound();
@@ -39,24 +35,27 @@ public class MovieDetailsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<MovieDetails>> Create(MovieDetails details)
     {
-        await _repository.AddAsync(details);
-        await _context.SaveChangesAsync();
+        var created = await _services.MovieDetails.CreateAsync(details);
 
-        return CreatedAtAction(nameof(Get), new { id = details.Id }, details);
+        return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
+    }
+
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Update(int id, MovieDetails details)
+    {
+        if (id != details.Id)
+            return BadRequest();
+
+        await _services.MovieDetails.UpdateAsync(details);
+
+        return NoContent();
     }
 
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {
-        var details = await _repository.GetAsync(id);
-
-        if (details is null)
-            return NotFound();
-
-        _repository.Delete(details);
-        await _context.SaveChangesAsync();
+        await _services.MovieDetails.DeleteAsync(id);
 
         return NoContent();
     }
 }
-

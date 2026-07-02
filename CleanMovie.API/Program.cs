@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using CleanMovie.Core.Interfaces;
@@ -31,13 +32,13 @@ builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IActorService, ActorService>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<IMovieDetailService, MovieDetailService>();
-
 builder.Services.AddScoped<IServiceManager, ServiceManager>();
+
 // Repositories
-// builder.Services.AddScoped<IMovieRepository, MovieRepository>();
-// builder.Services.AddScoped<IActorRepository, ActorRepository>();
-// builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
-// builder.Services.AddScoped<IMovieDetailsRepository, MovieDetailsRepository>();
+builder.Services.AddScoped<IMovieRepository, MovieRepository>();
+builder.Services.AddScoped<IActorRepository, ActorRepository>();
+builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+builder.Services.AddScoped<IMovieDetailsRepository, MovieDetailsRepository>();
 
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -53,6 +54,10 @@ builder.Services.AddControllers()
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options => { var xmlFile =
+        $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"; var xmlPath
+        = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    options.IncludeXmlComments(xmlPath); });
 
 var app = builder.Build();
 

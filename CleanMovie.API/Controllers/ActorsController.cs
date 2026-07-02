@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using CleanMovie.Core.Interfaces;
+using CleanMovie.Service.Contracts;
 using CleanMovie.Core.Entities;
 
 namespace CleanMovie.API.Controllers;
@@ -8,27 +8,29 @@ namespace CleanMovie.API.Controllers;
 [Route("api/[controller]")]
 public class ActorsController : ControllerBase
 {
-    private readonly IActorRepository _repository;
-    private readonly IMovieDbContext _context;
+    private readonly IServiceManager _services;
 
-    public ActorsController(
-        IActorRepository repository,
-        IMovieDbContext context)
+    public ActorsController(IServiceManager services)
     {
-        _repository = repository;
-        _context = context;
+        _services = services;
     }
 
+    /// <summary>
+    /// Get all actors.
+    /// </summary>
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Actor>>> GetAll()
     {
-        return Ok(await _repository.GetAllAsync());
+        return Ok(await _services.Actors.GetAllAsync());
     }
 
+    /// <summary>
+    /// Get specific actor.
+    /// </summary>
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Actor>> Get(int id)
     {
-        var actor = await _repository.GetAsync(id);
+        var actor = await _services.Actors.GetAsync(id);
 
         if (actor is null)
             return NotFound();
@@ -36,42 +38,38 @@ public class ActorsController : ControllerBase
         return Ok(actor);
     }
 
+    /// <summary>
+    /// Add a new actor.
+    /// </summary>
     [HttpPost]
     public async Task<ActionResult<Actor>> Create(Actor actor)
     {
-        await _repository.AddAsync(actor);
-        await _context.SaveChangesAsync();
+        var created = await _services.Actors.CreateAsync(actor);
 
-        return CreatedAtAction(nameof(Get), new { id = actor.Id }, actor);
+        return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
     }
 
+    /// <summary>
+    /// Update info on existing actor.
+    /// </summary>
     [HttpPut("{id:int}")]
     public async Task<IActionResult> Update(int id, Actor actor)
     {
         if (id != actor.Id)
             return BadRequest();
 
-        var existing = await _repository.GetAsync(id);
-
-        if (existing is null)
-            return NotFound();
-
-        _repository.Update(actor);
-        await _context.SaveChangesAsync();
+        await _services.Actors.UpdateAsync(actor);
 
         return NoContent();
     }
 
+    /// <summary>
+    /// Delete an actor.
+    /// </summary>
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {
-        var actor = await _repository.GetAsync(id);
-
-        if (actor is null)
-            return NotFound();
-
-        _repository.Delete(actor);
-        await _context.SaveChangesAsync();
+        await _services.Actors.DeleteAsync(id);
 
         return NoContent();
     }

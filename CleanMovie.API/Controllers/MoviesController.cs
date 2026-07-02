@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using CleanMovie.Core.Interfaces;
-using CleanMovie.Core.DomainContracts;
-using CleanMovie.Core.Entities;
 using CleanMovie.Core.Entities.DTOs;
+using CleanMovie.Core.Entities;
+using CleanMovie.Service.Contracts;
 
 namespace CleanMovie.API.Controllers;
 
@@ -10,118 +9,70 @@ namespace CleanMovie.API.Controllers;
 [Route("api/[controller]")]
 public class MoviesController : ControllerBase
 {
-    private readonly IMovieRepository _repository;
-    private readonly IMovieDbContext _context;
+    private readonly IServiceManager _services;
 
-    public MoviesController(
-        IMovieRepository repository,
-        IMovieDbContext context)
+    public MoviesController(IServiceManager services)
     {
-        _repository = repository;
-        _context = context;
+        _services = services;
     }
 
+    /// <summary>
+    /// Get all movies detailed.
+    /// </summary>
     [HttpGet]
     public async Task<ActionResult<IEnumerable<MovieDto>>> GetAll()
     {
-        var movies = await _repository.GetAllAsync();
-
-        var result = movies.Select(movie => new MovieDto(
-            movie.Id,
-            movie.Title,
-            movie.Year,
-            movie.Genre,
-            movie.Duration,
-            movie.Details is null
-                ? null
-                : new MovieDetailsDto(
-                    movie.Details.Synopsis,
-                    movie.Details.Language,
-                    movie.Details.Budget),
-            movie.MovieActors.Select(ma => new ActorDto(
-                ma.Actor.Id,
-                ma.Actor.Name,
-                ma.Actor.BirthDate)),
-            movie.Reviews.Select(r => new ReviewDto(
-                r.Id,
-                r.Reviewer,
-                r.Comment,
-                r.Rating))
-        ));
-
-        return Ok(result);
+        return Ok(await _services.Movies.GetAllAsync());
     }
-    
+
+    /// <summary>
+    /// Get unique movie detailed.
+    /// </summary>
     [HttpGet("{id:int}")]
     public async Task<ActionResult<MovieDto>> Get(int id)
     {
-        var movie = await _repository.GetAsync(id);
+        var movie = await _services.Movies.GetAsync(id);
 
         if (movie is null)
             return NotFound();
 
-        var dto = new MovieDto(
-            movie.Id,
-            movie.Title,
-            movie.Year,
-            movie.Genre,
-            movie.Duration,
-            movie.Details is null
-                ? null
-                : new MovieDetailsDto(
-                    movie.Details.Synopsis,
-                    movie.Details.Language,
-                    movie.Details.Budget),
-            movie.MovieActors.Select(ma => new ActorDto(
-                ma.Actor.Id,
-                ma.Actor.Name,
-                ma.Actor.BirthDate)),
-            movie.Reviews.Select(r => new ReviewDto(
-                r.Id,
-                r.Reviewer,
-                r.Comment,
-                r.Rating)));
-
-        return Ok(dto);
+        return Ok(movie);
     }
-    
+
+    /// <summary>
+    /// Add a new movie.
+    /// </summary>
     [HttpPost]
     public async Task<ActionResult<Movie>> Create(Movie movie)
     {
-        await _repository.AddAsync(movie);
-        await _context.SaveChangesAsync();
+        var created = await _services.Movies.CreateAsync(movie);
 
-        return CreatedAtAction(nameof(Get), new { id = movie.Id }, movie);
+        return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
     }
 
+    /// <summary>
+    /// Update an existing movie..
+    /// </summary>
     [HttpPut("{id:int}")]
     public async Task<IActionResult> Update(int id, Movie movie)
     {
         if (id != movie.Id)
             return BadRequest();
 
-        var existing = await _repository.GetAsync(id);
-
-        if (existing is null)
-            return NotFound();
-
-        _repository.Update(movie);
-        await _context.SaveChangesAsync();
+        await _services.Movies.UpdateAsync(movie);
 
         return NoContent();
     }
 
+    /// <summary>
+    /// Remove specified movie.
+    /// </summary>
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {
-        var movie = await _repository.GetAsync(id);
-
-        if (movie is null)
-            return NotFound();
-
-        _repository.Remove(movie);
-        await _context.SaveChangesAsync();
+        await _services.Movies.DeleteAsync(id);
 
         return NoContent();
     }
 }
+
