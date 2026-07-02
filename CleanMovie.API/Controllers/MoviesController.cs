@@ -22,10 +22,10 @@ public class MoviesController : ControllerBase
     /// Get all movies detailed.
     /// </summary>
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<MovieDto>>> GetAll()
+    public async Task<ActionResult<IEnumerable<MovieDto>>> GetAll([FromQuery] QueryParameters qp)
     {
         _logger.LogInformation("Get all movies");
-        return Ok(await _services.Movies.GetAllAsync());
+        return Ok(await _services.Movies.GetAllAsync(qp));
     }
 
     /// <summary>

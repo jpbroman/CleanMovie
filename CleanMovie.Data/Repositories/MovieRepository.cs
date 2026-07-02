@@ -15,15 +15,18 @@ public class MovieRepository : IMovieRepository
         _context = context;
     }
 
-    public async Task<IEnumerable<Movie>> GetAllAsync()
+    public async Task<IEnumerable<Movie>> GetAllAsync(QueryParameters queryParameters)
     {
         return await _context.Movies
             .Include(m => m.Details)
             .Include(m => m.Reviews)
             .Include(m => m.MovieActors)
             .ThenInclude(ma => ma.Actor)
+            .Skip((queryParameters.PageNumber - 1) * queryParameters.PageSize)
+            .Take(queryParameters.PageSize)
             .ToListAsync();
     }
+    
     public async Task<Movie?> GetAsync(int id)
     {
         return await _context.Movies

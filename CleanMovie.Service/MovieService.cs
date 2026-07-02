@@ -41,9 +41,9 @@ public class MovieService : IMovieService
         );
     }
 
-    public async Task<IEnumerable<MovieDto>> GetAllAsync()
+    public async Task<IEnumerable<MovieDto>> GetAllAsync(QueryParameters qp)
     {
-        var movies = await _unitOfWork.Movies.GetAllAsync();
+        var movies = await _unitOfWork.Movies.GetAllAsync(qp);
 
         return movies.Select(Map);
     }
