@@ -10,9 +10,11 @@ namespace CleanMovie.API.Controllers;
 public class MoviesController : ControllerBase
 {
     private readonly IServiceManager _services;
-
-    public MoviesController(IServiceManager services)
+    private readonly ILogger<MoviesController> _logger;
+    
+    public MoviesController(IServiceManager services, ILogger<MoviesController> logger)
     {
+        _logger = logger;
         _services = services;
     }
 
@@ -22,6 +24,7 @@ public class MoviesController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<MovieDto>>> GetAll()
     {
+        _logger.LogInformation("Get all movies");
         return Ok(await _services.Movies.GetAllAsync());
     }
 
@@ -31,6 +34,7 @@ public class MoviesController : ControllerBase
     [HttpGet("{id:int}")]
     public async Task<ActionResult<MovieDto>> Get(int id)
     {
+        _logger.LogInformation($"Get movie with Id {id}");
         var movie = await _services.Movies.GetAsync(id);
 
         if (movie is null)
@@ -45,6 +49,7 @@ public class MoviesController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Movie>> Create(Movie movie)
     {
+        _logger.LogInformation($"Adding movie {movie.Title}");
         var created = await _services.Movies.CreateAsync(movie);
 
         return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
@@ -56,6 +61,7 @@ public class MoviesController : ControllerBase
     [HttpPut("{id:int}")]
     public async Task<IActionResult> Update(int id, Movie movie)
     {
+        _logger.LogInformation($"Updating movie {movie.Title}");
         if (id != movie.Id)
             return BadRequest();
 
@@ -70,6 +76,7 @@ public class MoviesController : ControllerBase
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {
+        _logger.LogInformation($"Deleting movie with Id {id}");
         await _services.Movies.DeleteAsync(id);
 
         return NoContent();
