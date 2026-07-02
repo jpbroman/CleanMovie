@@ -3,8 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using CleanMovie.Core.Interfaces;
 using CleanMovie.Core.DomainContracts;
 using CleanMovie.Data;
-using CleanMovie.Service;using CleanMovie.Service.Contracts;
+using CleanMovie.Service;
+using CleanMovie.Service.Contracts;
 using CleanMovie.Data.Repositories;
+using CleanMovie.Data.Services;
+using CleanMovie.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
