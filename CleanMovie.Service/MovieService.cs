@@ -57,6 +57,56 @@ public class MovieService : IMovieService
             : Map(movie);
     }
 
+    public async Task<MovieDto> CreateAsync(CreateMovieDto dto)
+    {
+        var movie = new Movie
+        {
+            Title = dto.Title,
+            Year = dto.Year,
+            Genre = dto.Genre,
+            Duration = dto.Duration
+        };
+
+        if (dto.Details is not null)
+        {
+            movie.Details = new MovieDetails
+            {
+                Synopsis = dto.Details.Synopsis,
+                Language = dto.Details.Language,
+                Budget = dto.Details.Budget
+            };
+        }
+
+        foreach (var actorDto in dto.Actors)
+        {
+            var actor = new Actor
+            {
+                Name = actorDto.Name,
+                BirthDate = actorDto.BirthDate
+            };
+
+            movie.MovieActors.Add(new MovieActor
+            {
+                Actor = actor
+            });
+        }
+
+        foreach (var reviewDto in dto.Reviews)
+        {
+            movie.Reviews.Add(new Review
+            {
+                Reviewer = reviewDto.Reviewer,
+                Comment = reviewDto.Comment,
+                Rating = reviewDto.Rating
+            });
+        }
+
+        await _unitOfWork.Movies.AddAsync(movie);
+        await _unitOfWork.CompleteAsync();
+
+        return Map(movie);
+    }
+/*
     public async Task<Movie> CreateAsync(Movie movie)
     {
         await _unitOfWork.Movies.AddAsync(movie);
@@ -64,13 +114,71 @@ public class MovieService : IMovieService
 
         return movie;
     }
+*/
+    public async Task UpdateAsync(int id, CreateMovieDto dto)
+    {
+        var movie = await _unitOfWork.Movies.GetAsync(id);
 
-    public async Task UpdateAsync(Movie movie)
+        if (movie is null)
+            throw new KeyNotFoundException($"Movie {id} was not found.");
+
+        // Update movie
+        movie.Title = dto.Title;
+        movie.Year = dto.Year;
+        movie.Genre = dto.Genre;
+        movie.Duration = dto.Duration;
+
+        // Update details
+        if (dto.Details is not null)
+        {
+            if (movie.Details is null)
+            {
+                movie.Details = new MovieDetails();
+            }
+
+            movie.Details.Synopsis = dto.Details.Synopsis;
+            movie.Details.Language = dto.Details.Language;
+            movie.Details.Budget = dto.Details.Budget;
+        }
+
+        // Replace actors
+        movie.MovieActors.Clear();
+
+        foreach (var actorDto in dto.Actors)
+        {
+            movie.MovieActors.Add(new MovieActor
+            {
+                Actor = new Actor
+                {
+                    Name = actorDto.Name,
+                    BirthDate = actorDto.BirthDate
+                }
+            });
+        }
+
+        // Replace reviews
+        movie.Reviews.Clear();
+
+        foreach (var reviewDto in dto.Reviews)
+        {
+            movie.Reviews.Add(new Review
+            {
+                Reviewer = reviewDto.Reviewer,
+                Comment = reviewDto.Comment,
+                Rating = reviewDto.Rating
+            });
+        }
+
+        _unitOfWork.Movies.Update(movie);
+
+        await _unitOfWork.CompleteAsync();
+    }
+/*    public async Task UpdateAsync(Movie movie)
     {
         _unitOfWork.Movies.Update(movie);
         await _unitOfWork.CompleteAsync();
     }
-
+*/
     public async Task DeleteAsync(int id)
     {
         var movie = await _unitOfWork.Movies.GetAsync(id);

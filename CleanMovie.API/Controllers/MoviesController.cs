@@ -47,29 +47,26 @@ public class MoviesController : ControllerBase
     /// Add a new movie.
     /// </summary>
     [HttpPost]
-    public async Task<ActionResult<Movie>> Create(Movie movie)
+    public async Task<ActionResult<MovieDto>> Create(CreateMovieDto dto)
     {
-        _logger.LogInformation($"Adding movie {movie.Title}");
-        var created = await _services.Movies.CreateAsync(movie);
+        var movie = await _services.Movies.CreateAsync(dto);
 
-        return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
+        return CreatedAtAction(nameof(Get), new { id = movie.Id }, movie);
     }
 
     /// <summary>
     /// Update an existing movie..
     /// </summary>
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> Update(int id, Movie movie)
+    public async Task<IActionResult> Update(int id, CreateMovieDto dto)
     {
-        _logger.LogInformation($"Updating movie {movie.Title}");
-        if (id != movie.Id)
-            return BadRequest();
+        _logger.LogInformation($"Updating movie {dto.Title}");
 
-        await _services.Movies.UpdateAsync(movie);
+        await _services.Movies.UpdateAsync(id, dto);
 
         return NoContent();
     }
-
+    
     /// <summary>
     /// Remove specified movie.
     /// </summary>

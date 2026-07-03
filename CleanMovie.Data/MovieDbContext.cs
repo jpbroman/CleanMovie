@@ -23,7 +23,7 @@ public class MovieDbContext : DbContext, IMovieDbContext
         modelBuilder.Entity<Movie>()
             .HasOne(m => m.Details)
             .WithOne(d => d.Movie)
-            .HasForeignKey<MovieDetails>(d => d.MovieId);
+           .HasForeignKey<MovieDetails>(d => d.MovieId);
 
         modelBuilder.Entity<MovieActor>()
             .HasKey(ma => new { ma.MovieId, ma.ActorId });

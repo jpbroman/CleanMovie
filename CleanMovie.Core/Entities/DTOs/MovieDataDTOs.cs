@@ -25,3 +25,26 @@ public record ReviewDto(
     string Reviewer,
     string Comment,
     int Rating);
+
+public record CreateActorDto(
+    string Name,
+    DateTime BirthDate);
+    
+public record CreateReviewDto(
+    string Reviewer,
+    string Comment,
+    int Rating);
+
+public record CreateMovieDto(
+    string Title,
+    int Year,
+    string Genre,
+    int Duration,
+    MovieDetailsDto Details,
+    IEnumerable<CreateActorDto> Actors,
+    IEnumerable<CreateReviewDto> Reviews);
+    
+public record CreateMovieDetailsDto(
+    string Synopsis,
+    string Language,
+    int Budget);

@@ -17,14 +17,14 @@ public class MovieDetailsRepository : IMovieDetailsRepository
     public async Task<IEnumerable<MovieDetails>> GetAllAsync()
     {
         return await _context.MovieDetails
-            .Include(md => md.Movie)
+  //          .Include(md => md.Movie)
             .ToListAsync();
     }
 
     public async Task<MovieDetails?> GetAsync(int id)
     {
         return await _context.MovieDetails
-            .Include(md => md.Movie)
+//            .Include(md => md.Movie)
             .FirstOrDefaultAsync(md => md.Id == id);
     }
 
