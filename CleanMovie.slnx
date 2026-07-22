@@ -3,4 +3,5 @@
   <Project Path="CleanMovie.Core/CleanMovie.Core.csproj" />
   <Project Path="CleanMovie.Data/CleanMovie.Data.csproj" />
   <Project Path="CleanMovie.Service\CleanMovie.Service.csproj" />
+  <Project Path="CleanMovie.Tests/CleanMovie.Tests.csproj" />
 </Solution>
