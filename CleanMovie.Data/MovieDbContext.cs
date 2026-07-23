@@ -16,7 +16,7 @@ public class MovieDbContext : DbContext, IMovieDbContext
     public Microsoft.EntityFrameworkCore.DbSet<Actor> Actors => Set<Actor>();
     public Microsoft.EntityFrameworkCore.DbSet<MovieActor> MovieActors => Set<MovieActor>();
     public Microsoft.EntityFrameworkCore.DbSet<Review> Reviews => Set<Review>();
-
+    public DbSet<User> Users => Set<User>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -40,9 +40,6 @@ builder.Services.AddScoped<IActorRepository, ActorRepository>();
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 builder.Services.AddScoped<IMovieDetailsRepository, MovieDetailsRepository>();
 
-
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
 // Controllers + JSON serialization
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
@@ -91,7 +88,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
