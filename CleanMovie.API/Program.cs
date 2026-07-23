@@ -9,6 +9,7 @@ using CleanMovie.Service.Contracts;
 using CleanMovie.Data.Repositories;
 using CleanMovie.Data.Services;
 using CleanMovie.Services;
+using CleanMovie.Service.Security;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,6 +40,9 @@ builder.Services.AddScoped<IMovieRepository, MovieRepository>();
 builder.Services.AddScoped<IActorRepository, ActorRepository>();
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 builder.Services.AddScoped<IMovieDetailsRepository, MovieDetailsRepository>();
+
+// Authentication and Authorization
+builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 
 // Controllers + JSON serialization
 builder.Services.AddControllers()
