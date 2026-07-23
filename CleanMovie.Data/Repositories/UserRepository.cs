@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using CleanMovie.Core.Interfaces;
 using CleanMovie.Core.Entities;
 
+namespace CleanMovie.Data.Repositories;
+
 public class UserRepository : IUserRepository
 {
     private readonly IMovieDbContext _context;
@@ -10,11 +12,10 @@ public class UserRepository : IUserRepository
     {
         _context = context;
     }
-
     public async Task<User?> GetUserByUsernameAsync(string username)
     {
-        return await _context.Users.
-        FirstOrDefaultAsync(u => u.Username == username);
+        return await _context.Users
+            .FirstOrDefaultAsync(u => u.Username == username);
     }
     public async Task AddUserAsync(User user)
     {
