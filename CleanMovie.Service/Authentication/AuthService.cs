@@ -1,3 +1,4 @@
+using BCrypt.Net;
 using CleanMovie.Core.Entities;
 using CleanMovie.Core.Interfaces;
 
@@ -6,14 +7,14 @@ namespace CleanMovie.Service.Authentication;
 public class AuthService : IAuthService
 {
     private readonly IUserRepository _userRepository;
-    private readonly IPasswordHasher _passwordHasher;
+    private readonly IJwtTokenService _jwtTokenService;
 
     public AuthService(
         IUserRepository userRepository,
-        IPasswordHasher passwordHasher)
+        IJwtTokenService jwtTokenService)
     {
         _userRepository = userRepository;
-        _passwordHasher = passwordHasher;
+        _jwtTokenService = jwtTokenService;
     }
 
     public async Task RegisterAsync(
@@ -27,25 +28,25 @@ public class AuthService : IAuthService
         var user = new User
         {
             Username = username,
-            PasswordHash = _passwordHasher.Hash(password),
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword(password),
             Role = role
         };
 
         await _userRepository.AddUserAsync(user);
     }
 
-    public async Task<User?> AuthenticateAsync(
-        string username,
-        string password)
+    public async Task<string?> LoginAsync(string username, string password)
     {
         var user = await _userRepository.GetUserByUsernameAsync(username);
 
         if (user == null)
             return null;
 
-        if (!_passwordHasher.Verify(password, user.PasswordHash))
+        var validPassword = BCrypt.Net.BCrypt.Verify(password, user.PasswordHash);
+
+        if (!validPassword)
             return null;
 
-        return user;
+        return _jwtTokenService.GenerateToken(user);
     }
 }

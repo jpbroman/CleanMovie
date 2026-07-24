@@ -1,6 +1,6 @@
 using CleanMovie.Core.Interfaces;
 
-namespace CleanMovie.Service.Security;
+namespace CleanMovie.Service.Authentication;
 
 public class PasswordHasher : IPasswordHasher
 {
