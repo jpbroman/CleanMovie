@@ -10,7 +10,7 @@ public interface IMovieDbContext
     DbSet<MovieDetails> MovieDetails { get; }
     DbSet<Review> Reviews { get; }
     DbSet<MovieActor> MovieActors { get; }
-
+    DbSet<User> Users { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }
 

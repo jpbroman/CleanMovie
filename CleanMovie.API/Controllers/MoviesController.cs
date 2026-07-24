@@ -2,11 +2,14 @@ using Microsoft.AspNetCore.Mvc;
 using CleanMovie.Core.Entities.DTOs;
 using CleanMovie.Core.Entities;
 using CleanMovie.Service.Contracts;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CleanMovie.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
+
 public class MoviesController : ControllerBase
 {
     private readonly IServiceManager _services;
@@ -21,6 +24,8 @@ public class MoviesController : ControllerBase
     /// <summary>
     /// Get all movies detailed.
     /// </summary>
+    /// [AllowAnonymous]
+    [AllowAnonymous]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<MovieDto>>> GetAll([FromQuery] QueryParameters qp)
     {
@@ -46,6 +51,7 @@ public class MoviesController : ControllerBase
     /// <summary>
     /// Add a new movie.
     /// </summary>
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<ActionResult<MovieDto>> Create(CreateMovieDto dto)
     {
@@ -57,6 +63,7 @@ public class MoviesController : ControllerBase
     /// <summary>
     /// Update an existing movie..
     /// </summary>
+    [Authorize(Roles = "Admin")]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> Update(int id, CreateMovieDto dto)
     {
@@ -70,6 +77,7 @@ public class MoviesController : ControllerBase
     /// <summary>
     /// Remove specified movie.
     /// </summary>
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {
