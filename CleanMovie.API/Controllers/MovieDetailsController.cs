@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using CleanMovie.Service.Contracts;
 using CleanMovie.Core.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CleanMovie.API.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/[controller]")]
 public class MovieDetailsController : ControllerBase
 {
@@ -32,6 +34,7 @@ public class MovieDetailsController : ControllerBase
         return Ok(details);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<ActionResult<MovieDetails>> Create(MovieDetails details)
     {
@@ -40,6 +43,7 @@ public class MovieDetailsController : ControllerBase
         return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> Update(int id, MovieDetails details)
     {
@@ -51,6 +55,7 @@ public class MovieDetailsController : ControllerBase
         return NoContent();
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {

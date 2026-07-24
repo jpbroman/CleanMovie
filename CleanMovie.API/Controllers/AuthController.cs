@@ -30,11 +30,11 @@ public class AuthController : ControllerBase
                 Message = "User registered successfully."
             });
         }
-        catch (InvalidOperationException ex)
+        catch (InvalidOperationException)
         {
             return BadRequest(new
             {
-                Message = ex.Message
+                Message = "Registration failed."
             });
         }
     }

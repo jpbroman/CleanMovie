@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using CleanMovie.Service.Contracts;
 using CleanMovie.Core.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CleanMovie.API.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/[controller]")]
 public class ReviewsController : ControllerBase
 {
@@ -16,6 +18,7 @@ public class ReviewsController : ControllerBase
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public async Task<ActionResult<IEnumerable<Review>>> GetAll()
     {
         return Ok(await _services.Reviews.GetAllAsync());
