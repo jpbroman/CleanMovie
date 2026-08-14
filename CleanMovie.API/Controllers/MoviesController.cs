@@ -36,6 +36,7 @@ public class MoviesController : ControllerBase
     /// <summary>
     /// Get unique movie detailed.
     /// </summary>
+    [AllowAnonymous]
     [HttpGet("{id:int}")]
     public async Task<ActionResult<MovieDto>> Get(int id)
     {
@@ -51,7 +52,8 @@ public class MoviesController : ControllerBase
     /// <summary>
     /// Add a new movie.
     /// </summary>
-    [Authorize(Roles = "Admin")]
+//    [Authorize(Roles = "Admin")]
+    [AllowAnonymous]
     [HttpPost]
     public async Task<ActionResult<MovieDto>> Create(CreateMovieDto dto)
     {
@@ -63,7 +65,7 @@ public class MoviesController : ControllerBase
     /// <summary>
     /// Update an existing movie..
     /// </summary>
-    [Authorize(Roles = "Admin")]
+    [AllowAnonymous]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> Update(int id, CreateMovieDto dto)
     {
@@ -77,7 +79,7 @@ public class MoviesController : ControllerBase
     /// <summary>
     /// Remove specified movie.
     /// </summary>
-    [Authorize(Roles = "Admin")]
+    [AllowAnonymous]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {

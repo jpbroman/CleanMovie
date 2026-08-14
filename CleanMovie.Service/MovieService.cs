@@ -22,23 +22,7 @@ public class MovieService : IMovieService
             movie.Title,
             movie.Year,
             movie.Genre,
-            movie.Duration,
-            movie.Details is null
-                ? null
-                : new MovieDetailsDto(
-                    movie.Details.Synopsis,
-                    movie.Details.Language,
-                    movie.Details.Budget),
-            movie.MovieActors.Select(ma => new ActorDto(
-                ma.Actor.Id,
-                ma.Actor.Name,
-                ma.Actor.BirthDate)),
-            movie.Reviews.Select(r => new ReviewDto(
-                r.Id,
-                r.Reviewer,
-                r.Comment,
-                r.Rating))
-        );
+            movie.Duration);
     }
 
     public async Task<IEnumerable<MovieDto>> GetAllAsync(QueryParameters qp)
@@ -67,54 +51,11 @@ public class MovieService : IMovieService
             Duration = dto.Duration
         };
 
-        if (dto.Details is not null)
-        {
-            movie.Details = new MovieDetails
-            {
-                Synopsis = dto.Details.Synopsis,
-                Language = dto.Details.Language,
-                Budget = dto.Details.Budget
-            };
-        }
-
-        foreach (var actorDto in dto.Actors)
-        {
-            var actor = new Actor
-            {
-                Name = actorDto.Name,
-                BirthDate = actorDto.BirthDate
-            };
-
-            movie.MovieActors.Add(new MovieActor
-            {
-                Actor = actor
-            });
-        }
-
-        foreach (var reviewDto in dto.Reviews)
-        {
-            movie.Reviews.Add(new Review
-            {
-                Reviewer = reviewDto.Reviewer,
-                Comment = reviewDto.Comment,
-                Rating = reviewDto.Rating
-            });
-        }
-
         await _unitOfWork.Movies.AddAsync(movie);
         await _unitOfWork.CompleteAsync();
 
         return Map(movie);
     }
-/*
-    public async Task<Movie> CreateAsync(Movie movie)
-    {
-        await _unitOfWork.Movies.AddAsync(movie);
-        await _unitOfWork.CompleteAsync();
-
-        return movie;
-    }
-*/
     public async Task UpdateAsync(int id, CreateMovieDto dto)
     {
         var movie = await _unitOfWork.Movies.GetAsync(id);
@@ -128,57 +69,10 @@ public class MovieService : IMovieService
         movie.Genre = dto.Genre;
         movie.Duration = dto.Duration;
 
-        // Update details
-        if (dto.Details is not null)
-        {
-            if (movie.Details is null)
-            {
-                movie.Details = new MovieDetails();
-            }
-
-            movie.Details.Synopsis = dto.Details.Synopsis;
-            movie.Details.Language = dto.Details.Language;
-            movie.Details.Budget = dto.Details.Budget;
-        }
-
-        // Replace actors
-        movie.MovieActors.Clear();
-
-        foreach (var actorDto in dto.Actors)
-        {
-            movie.MovieActors.Add(new MovieActor
-            {
-                Actor = new Actor
-                {
-                    Name = actorDto.Name,
-                    BirthDate = actorDto.BirthDate
-                }
-            });
-        }
-
-        // Replace reviews
-        movie.Reviews.Clear();
-
-        foreach (var reviewDto in dto.Reviews)
-        {
-            movie.Reviews.Add(new Review
-            {
-                Reviewer = reviewDto.Reviewer,
-                Comment = reviewDto.Comment,
-                Rating = reviewDto.Rating
-            });
-        }
-
         _unitOfWork.Movies.Update(movie);
 
         await _unitOfWork.CompleteAsync();
     }
-/*    public async Task UpdateAsync(Movie movie)
-    {
-        _unitOfWork.Movies.Update(movie);
-        await _unitOfWork.CompleteAsync();
-    }
-*/
     public async Task DeleteAsync(int id)
     {
         var movie = await _unitOfWork.Movies.GetAsync(id);

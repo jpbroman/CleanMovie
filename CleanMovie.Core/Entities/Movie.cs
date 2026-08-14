@@ -11,8 +11,8 @@ public class Movie
     public string Genre { get; set; } = string.Empty;
     public int Duration { get; set; }
 
-    public MovieDetails? Details { get; set; }
+    public MovieDetails? Details { get; set; } = null;
 
-    public ICollection<MovieActor> MovieActors { get; set; } = [];
-    public ICollection<Review> Reviews { get; set; } = [];
+    public ICollection<MovieActor>? MovieActors { get; set; } = [];
+    public ICollection<Review>? Reviews { get; set; } = [];
 }

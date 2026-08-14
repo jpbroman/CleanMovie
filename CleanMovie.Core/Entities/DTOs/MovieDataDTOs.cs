@@ -5,15 +5,13 @@ public record MovieDto(
     string Title,
     int Year,
     string Genre,
-    int Duration,
-    MovieDetailsDto? Details,
-    IEnumerable<ActorDto> Actors,
-    IEnumerable<ReviewDto> Reviews);
+    int Duration);
     
 public record MovieDetailsDto(
-    string Synopsis,
-    string Language,
-    int Budget);
+    int? MovieId,
+    string? Synopsis,
+    string? Language,
+    int? Budget);
 
 public record ActorDto(
     int Id,
@@ -39,12 +37,11 @@ public record CreateMovieDto(
     string Title,
     int Year,
     string Genre,
-    int Duration,
-    MovieDetailsDto Details,
-    IEnumerable<CreateActorDto> Actors,
-    IEnumerable<CreateReviewDto> Reviews);
+    int Duration);
     
 public record CreateMovieDetailsDto(
-    string Synopsis,
-    string Language,
-    int Budget);
+    int? MovieId,
+    string? Synopsis = "",
+    string? Language = "",
+    int? Budget = 0,
+    Movie? Movie = null);

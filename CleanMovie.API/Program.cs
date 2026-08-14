@@ -2,6 +2,14 @@ using CleanMovie.API.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        policy => policy.WithOrigins("http://localhost:5173") // Allow your frontend
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
+});
+
 builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddRepositories();
 builder.Services.AddApplicationServices();
@@ -23,7 +31,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseCors("AllowFrontend");
 app.MapControllers();
 
 app.Run();
