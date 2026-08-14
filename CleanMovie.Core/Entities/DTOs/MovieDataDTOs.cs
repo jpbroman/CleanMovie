@@ -38,8 +38,8 @@ public record CreateMovieDto(
     int Year,
     string Genre,
     int Duration);
-    
-public record CreateMovieDetailsDto(
+ 
+ public record CreateMovieDetailsDto(
     int? MovieId,
     string? Synopsis = "",
     string? Language = "",
