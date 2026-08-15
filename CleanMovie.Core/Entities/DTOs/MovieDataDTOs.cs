@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 namespace CleanMovie.Core.Entities.DTOs;
 
 public record MovieDto(
@@ -16,10 +17,11 @@ public record MovieDetailsDto(
     string? Language,
     int? Budget);
 
+
 public record ActorDto(
     int Id,
     string Name,
-    string? BirthDate);
+    string BirthDate);
 
 public record ReviewDto(
     int Id,
