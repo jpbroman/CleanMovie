@@ -5,7 +5,7 @@ namespace CleanMovie.Core.DomainContracts;
 
 public interface IMovieService
 {
-    Task<IEnumerable<MovieDto>> GetAllAsync(QueryParameters qp);
+    Task<List<MovieDto>> GetAllAsync(QueryParameters qp);
     Task<MovieDto?> GetAsync(int id);
 
     Task<MovieDto> CreateAsync(CreateMovieDto dto);

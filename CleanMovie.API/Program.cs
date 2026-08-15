@@ -1,4 +1,5 @@
 using CleanMovie.API.Extensions;
+using CleanMovie.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,5 +34,15 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseCors("AllowFrontend");
 app.MapControllers();
+
+// I Program.cs (längst ner innan app.Run())
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<MovieDbContext>();
+    
+    // Kör seeder-klassen
+    DbSeeder.Seed(context);
+}
 
 app.Run();

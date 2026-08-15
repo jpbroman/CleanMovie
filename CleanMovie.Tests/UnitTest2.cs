@@ -164,7 +164,7 @@ public class MovieDbTests
         var actor = new Actor
         {
             Name = "Keanu Reeves",
-            BirthDate = new DateTime(1964, 9, 2)
+            BirthDate = new DateTime(1964, 9, 2).ToString(),
         };
 
         db.Actors.Add(actor);

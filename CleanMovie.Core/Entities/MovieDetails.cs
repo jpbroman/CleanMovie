@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace CleanMovie.Core.Entities;
 public class MovieDetails
 {
@@ -6,5 +8,7 @@ public class MovieDetails
     public string Synopsis { get; set; } = string.Empty;
     public string Language { get; set; } = string.Empty;
     public int Budget { get; set; }
+
+    [JsonIgnore]
     public Movie Movie { get; set; } = null!;
 }

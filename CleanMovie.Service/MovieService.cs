@@ -22,14 +22,30 @@ public class MovieService : IMovieService
             movie.Title,
             movie.Year,
             movie.Genre,
-            movie.Duration);
+            movie.Duration,
+            movie.Details is not null
+                ? new MovieDetailsDto(
+                    movie.Details.MovieId,
+                    movie.Details.Synopsis,
+                    movie.Details.Language,
+                    movie.Details.Budget)
+                : null,
+                movie.MovieActors?.Select(ma => new ActorDto(
+                    ma.Actor.Id,
+                    ma.Actor.Name,
+                    ma.Actor.BirthDate)),
+                movie.Reviews?.Select(r => new ReviewDto(
+                    r.Id,
+                    r.Reviewer,
+                    r.Comment,
+                    r.Rating)));
     }
 
-    public async Task<IEnumerable<MovieDto>> GetAllAsync(QueryParameters qp)
+    public async Task<List<MovieDto>> GetAllAsync(QueryParameters qp)
     {
         var movies = await _unitOfWork.Movies.GetAllAsync(qp);
 
-        return movies.Select(Map);
+        return movies.Select(Map).ToList();
     }
 
     public async Task<MovieDto?> GetAsync(int id)

@@ -3,7 +3,10 @@ namespace CleanMovie.Core.DomainContracts;
 
 public interface IMovieRepository
 {
-    Task<IEnumerable<Movie>> GetAllAsync(QueryParameters qp);
+    // I IMovieRepository.cs
+    Task<List<Movie>> GetAllAsync(QueryParameters queryParameters);
+
+//    Task<IEnumerable<Movie>> GetAllAsync(QueryParameters qp);
     Task<Movie?> GetAsync(int id);
     Task<bool> AnyAsync(int id);
     Task AddAsync(Movie movie);

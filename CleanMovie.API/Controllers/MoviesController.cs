@@ -22,12 +22,12 @@ public class MoviesController : ControllerBase
     }
 
     /// <summary>
-    /// Get all movies detailed.
+    /// Get all movies.
     /// </summary>
     /// [AllowAnonymous]
     [AllowAnonymous]
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<MovieDto>>> GetAll([FromQuery] QueryParameters qp)
+    public async Task<ActionResult<List<MovieDto>>> GetAll([FromQuery] QueryParameters qp)
     {
         _logger.LogInformation("Get all movies");
         return Ok(await _services.Movies.GetAllAsync(qp));
@@ -38,15 +38,16 @@ public class MoviesController : ControllerBase
     /// </summary>
     [AllowAnonymous]
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<MovieDto>> Get(int id)
+    public async Task<ActionResult<MovieDto>> GetMovie(int id)
     {
-        _logger.LogInformation($"Get movie with Id {id}");
         var movie = await _services.Movies.GetAsync(id);
 
-        if (movie is null)
+        if (movie == null)
+        {
             return NotFound();
+        }
 
-        return Ok(movie);
+        return Ok(movie); 
     }
 
     /// <summary>
@@ -59,7 +60,7 @@ public class MoviesController : ControllerBase
     {
         var movie = await _services.Movies.CreateAsync(dto);
 
-        return CreatedAtAction(nameof(Get), new { id = movie.Id }, movie);
+        return CreatedAtAction(nameof(GetMovie), new { id = movie.Id }, movie);
     }
 
     /// <summary>
