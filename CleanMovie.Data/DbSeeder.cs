@@ -39,6 +39,15 @@ public static class DbSeeder
         var actor5 = new Actor { Name = "Tim Robbins", BirthDate = "1999-05-11" };
         var actor6 = new Actor { Name = "Leonardo DiCaprio", BirthDate = "1972-09-18" };
         var actor7 = new Actor { Name = "Joseph Gordon-Levitt", BirthDate = "1967-06-01" };
+        var actor8 = new Actor { Name = "Peter Broman", BirthDate = "1969-06-01" };
+        var actor9 = new Actor { Name = "Chuck Norris", BirthDate = "1940-03-10" };
+        var actor10 = new Actor { Name = "Jennifer Aniston", BirthDate = "1969-02-11" };
+        var actor11 = new Actor { Name = "Chevy Chase", BirthDate = "1943-10-08" };
+        var actor12 = new Actor { Name = "Jennifer Connely", BirthDate = "1970-12-12" };
+        var actor13 = new Actor { Name = "Kiera Knightley", BirthDate = "1985-03-26" };
+        var actor14 = new Actor { Name = "Stellan Skarsgård", BirthDate = "1951-06-13" };
+
+
 
         context.Actors.AddRange(actor1, actor2, actor3,actor4, actor5, actor6, actor7);
         
