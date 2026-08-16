@@ -68,7 +68,7 @@ public class MoviesController : ControllerBase
     /// </summary>
     [AllowAnonymous]
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> Update(int id, CreateMovieDto dto)
+    public async Task<IActionResult> Update(int id, MovieDto dto)
     {
         _logger.LogInformation($"Updating movie {dto.Title}");
 

@@ -1,5 +1,10 @@
+using CleanMovie.API.Controllers;
 using CleanMovie.API.Extensions;
+using CleanMovie.Core.Entities;
 using CleanMovie.Data;
+using CleanMovie.Data.Repositories;
+using CleanMovie.Service.Contracts;
+using CleanMovie.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

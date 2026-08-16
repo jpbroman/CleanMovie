@@ -32,13 +32,13 @@ public static class DbSeeder
         }
 
         // 2. Skapa några fristående skådespelare som vi kan återanvända
-        var actor1 = new Actor { Name = "Keanu Reeves" };
-        var actor2 = new Actor { Name = "Laurence Fishburne" };
-        var actor3 = new Actor { Name = "Sigourney Weaver" };
-        var actor4 = new Actor { Name = "Morgan Freeman" };
-        var actor5 = new Actor { Name = "Tim Robbins" };
-        var actor6 = new Actor { Name = "Leonardo DiCaprio" };
-        var actor7 = new Actor { Name = "Joseph Gordon-Levitt" };
+        var actor1 = new Actor { Name = "Keanu Reeves", BirthDate = "1961-07-01" };
+        var actor2 = new Actor { Name = "Laurence Fishburne", BirthDate = "1957-06-22" };
+        var actor3 = new Actor { Name = "Sigourney Weaver", BirthDate = "1959-02-12" };
+        var actor4 = new Actor { Name = "Morgan Freeman", BirthDate = "1951-11-13" };
+        var actor5 = new Actor { Name = "Tim Robbins", BirthDate = "1999-05-11" };
+        var actor6 = new Actor { Name = "Leonardo DiCaprio", BirthDate = "1972-09-18" };
+        var actor7 = new Actor { Name = "Joseph Gordon-Levitt", BirthDate = "1967-06-01" };
 
         context.Actors.AddRange(actor1, actor2, actor3,actor4, actor5, actor6, actor7);
         

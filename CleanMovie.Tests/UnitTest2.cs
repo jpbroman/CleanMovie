@@ -1,6 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using CleanMovie.Core.Entities;
 using CleanMovie.Data;
+using Microsoft.Data.Sqlite;
+using Xunit.Abstractions;
+
 
 public class MovieDbTests
 {
@@ -183,5 +186,6 @@ public class MovieDbTests
         Assert.NotNull(retrievedMovieActor);
         Assert.Equal(movie.Id, retrievedMovieActor.MovieId);
         Assert.Equal(actor.Id, retrievedMovieActor.ActorId);
-    }     
+        Assert.Equal("1964-09-02", actor.BirthDate);
+    }  
 }
