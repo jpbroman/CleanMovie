@@ -15,23 +15,42 @@ public class MovieRepository : IMovieRepository
         _context = context;
     }
 
-// I MovieRepository.cs
+    // public async Task<List<Movie>> GetAllAsync(QueryParameters queryParameters)
+    // {
+    //     return await _context.Movies
+    //         .Skip((queryParameters.PageNumber - 1) * queryParameters.PageSize)
+    //         .Take(queryParameters.PageSize)
+    //         .ToListAsync();
+    // }
+
     public async Task<List<Movie>> GetAllAsync(QueryParameters queryParameters)
     {
-        return await _context.Movies
+        var query = _context.Movies.AsQueryable();
+
+        // Filtrera på sökord (Titel) om det har skickats med
+        if (!string.IsNullOrWhiteSpace(queryParameters.Search))
+        {
+            // gör sökningen skiftlägesoberoende med .ToLower()
+            var searchTerm = queryParameters.Search.Trim().ToLower();
+            query = query.Where(m => m.Title.ToLower().Contains(searchTerm));
+        }
+
+        // Filtrera på Genre om det har valts
+        if (!string.IsNullOrWhiteSpace(queryParameters.Genre))
+        {
+            var genreFilter = queryParameters.Genre.Trim().ToLower();
+            
+            // Vi använder .ToLower() och .Contains() för att göra sökningen flexibel och skiftlägesoberoende
+            query = query.Where(m => m.Genre.ToLower().Contains(genreFilter));
+        }
+
+        // 4. Lägg på din befintliga paginering och skicka frågan till databasen
+        return await query
             .Skip((queryParameters.PageNumber - 1) * queryParameters.PageSize)
             .Take(queryParameters.PageSize)
             .ToListAsync();
     }
 
-    // public async Task<Movie?> GetAsync(int id)
-    // {
-    //     return await _context.Movies
-    //         .FirstOrDefaultAsync(m => m.Id == id);
-    // }
-
-
-// MovieRepository.cs
     public async Task<Movie?> GetAsync(int id)
     {
         return await _context.Movies

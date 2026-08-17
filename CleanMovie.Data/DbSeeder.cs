@@ -49,7 +49,8 @@ public static class DbSeeder
 
 
 
-        context.Actors.AddRange(actor1, actor2, actor3,actor4, actor5, actor6, actor7);
+        context.Actors.AddRange(actor1, actor2, actor3,actor4, actor5, actor6, actor7,
+            actor8, actor9, actor10, actor11, actor12, actor13, actor14);
         
 
         // 3. Skapa filmerna och bygg relationerna direkt i objekten

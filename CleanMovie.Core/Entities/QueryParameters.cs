@@ -7,6 +7,8 @@ public class QueryParameters
 
     public int PageNumber { get; set; } = 1;
 
+    public string? Search { get; set; }
+    public string? Genre { get; set; }
     public int PageSize
     {
         get => _pageSize;
