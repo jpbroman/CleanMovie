@@ -36,7 +36,7 @@ public class AuthServiceTests
             })
             .Build();
 
-        return new AuthService(new UserRepository(db), new JwtTokenService(configuration));
+        return new AuthService(new UserRepository(db), new JwtTokenService(configuration), new PasswordHasher());
     }
 
     [Fact]
