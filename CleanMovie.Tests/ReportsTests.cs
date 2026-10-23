@@ -147,6 +147,28 @@ public class ReportsTests
     }
 
     [Fact]
+    public async Task MostActiveActors_CountsActorsWithSameNameSeparately()
+    {
+        await using var db = CreateContext();
+        var first = AddMovie(db, "Drama");
+        var second = AddMovie(db, "Drama");
+        var third = AddMovie(db, "Drama");
+
+        Cast(db, new Actor { Name = "John Smith", BirthDate = "1960-01-01" }, first, second);
+        Cast(db, new Actor { Name = "John Smith", BirthDate = "1980-01-01" }, third);
+        await db.SaveChangesAsync();
+
+        var report = await new MovieRepository(db).GetDashboardStatisticsAsync();
+
+        Assert.Equal(
+            [
+                new ActorActivityDto("John Smith", 2),
+                new ActorActivityDto("John Smith", 1)
+            ],
+            report.MostActiveActors);
+    }
+
+    [Fact]
     public async Task MostActiveActors_ReturnsOnlyTheFiveMostActive()
     {
         await using var db = CreateContext();

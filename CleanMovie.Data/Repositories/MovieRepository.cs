@@ -111,8 +111,8 @@ public class MovieRepository : IMovieRepository
             .ToListAsync();
 
         var activeActors = actorData
-            .GroupBy(ma => ma.Actor.Name)
-            .Select(g => new ActorActivityDto(g.Key, g.Count()))
+            .GroupBy(ma => ma.ActorId)
+            .Select(g => new ActorActivityDto(g.First().Actor.Name, g.Count()))
             .OrderByDescending(g => g.MovieCount)
             .Take(5) // Topp 5 skådespelare
             .ToList();
