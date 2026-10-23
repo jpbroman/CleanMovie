@@ -1,6 +1,20 @@
+using CleanMovie.API.Controllers;
 using CleanMovie.API.Extensions;
+using CleanMovie.Core.Entities;
+using CleanMovie.Data;
+using CleanMovie.Data.Repositories;
+using CleanMovie.Service.Contracts;
+using CleanMovie.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        policy => policy.WithOrigins("http://localhost:5173") // Allow your frontend
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
+});
 
 builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddRepositories();
@@ -21,9 +35,19 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
+
+// I Program.cs (längst ner innan app.Run())
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<MovieDbContext>();
+    
+    // Kör seeder-klassen
+    DbSeeder.Seed(context);
+}
 
 app.Run();

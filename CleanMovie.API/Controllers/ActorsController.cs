@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace CleanMovie.API.Controllers;
 
-[Authorize]
+//[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class ActorsController : ControllerBase
@@ -44,7 +44,7 @@ public class ActorsController : ControllerBase
     /// Add a new actor.
     /// </summary>
 
-    [Authorize(Roles = "Admin")]
+//    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<ActionResult<Actor>> Create(Actor actor)
     {
@@ -71,7 +71,7 @@ public class ActorsController : ControllerBase
     /// <summary>
     /// Delete an actor.
     /// </summary>
-    [Authorize(Roles = "Admin")]
+//    [Authorize(Roles = "Admin")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {

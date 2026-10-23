@@ -1,31 +1,24 @@
 using Microsoft.AspNetCore.Mvc;
 using CleanMovie.Service.Contracts;
 using CleanMovie.Core.Entities;
-using Microsoft.AspNetCore.Authorization;
+using CleanMovie.Core.Entities.DTOs;
 
 namespace CleanMovie.API.Controllers;
 
 [ApiController]
-[Authorize]
 [Route("api/[controller]")]
-public class ReviewsController : ControllerBase
+public class ReviewsController(IServiceManager services) : ControllerBase
 {
-    private readonly IServiceManager _services;
-
-    public ReviewsController(IServiceManager services)
-    {
-        _services = services;
-    }
+    private readonly IServiceManager _services = services;
 
     [HttpGet]
-    [AllowAnonymous]
-    public async Task<ActionResult<IEnumerable<Review>>> GetAll()
+    public async Task<ActionResult<IEnumerable<ReviewDto>>> GetAll()
     {
         return Ok(await _services.Reviews.GetAllAsync());
     }
 
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<Review>> Get(int id)
+    public async Task<ActionResult<ReviewDto>> Get(int id)
     {
         var review = await _services.Reviews.GetAsync(id);
 
@@ -45,7 +38,6 @@ public class ReviewsController : ControllerBase
     public async Task<ActionResult<Review>> Create(Review review)
     {
         var created = await _services.Reviews.CreateAsync(review);
-
         return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
     }
 

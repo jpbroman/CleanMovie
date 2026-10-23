@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using CleanMovie.Core.Entities;
 using CleanMovie.Core.Interfaces;
+using CleanMovie.Core.Entities.DTOs;
 
 namespace CleanMovie.Data;
 
@@ -20,13 +21,22 @@ public class MovieDbContext : DbContext, IMovieDbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        // 1:1 Relation (Den du redan har för MovieDetails)
         modelBuilder.Entity<Movie>()
             .HasOne(m => m.Details)
             .WithOne(d => d.Movie)
-           .HasForeignKey<MovieDetails>(d => d.MovieId);
+            .HasForeignKey<MovieDetails>(d => d.MovieId);
 
+        // 1:N Relation för Reviews (En film har många recensioner)
+        modelBuilder.Entity<Review>()
+            .HasOne(r => r.Movie)
+            .WithMany(m => m.Reviews)
+            .HasForeignKey(r => r.MovieId)
+            .OnDelete(DeleteBehavior.Cascade); // Tar bort recensioner om filmen raderas
+
+        // N:M Relation för MovieActors (Kopplingstabell för Film <-> Skådespelare)
         modelBuilder.Entity<MovieActor>()
-            .HasKey(ma => new { ma.MovieId, ma.ActorId });
+            .HasKey(ma => new { ma.MovieId, ma.ActorId }); // Sammansatt primärnyckel
 
         modelBuilder.Entity<MovieActor>()
             .HasOne(ma => ma.Movie)
@@ -37,10 +47,6 @@ public class MovieDbContext : DbContext, IMovieDbContext
             .HasOne(ma => ma.Actor)
             .WithMany(a => a.MovieActors)
             .HasForeignKey(ma => ma.ActorId);
-        
-        modelBuilder.Entity<Review>()
-            .HasOne(r => r.Movie)
-            .WithMany(m => m.Reviews)
-            .HasForeignKey(r => r.MovieId);
     }
+
 }
