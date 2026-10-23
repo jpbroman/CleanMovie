@@ -46,6 +46,7 @@ public class MovieRepository : IMovieRepository
 
         // 4. Lägg på din befintliga paginering och skicka frågan till databasen
         return await query
+            .OrderBy(m => m.Id)
             .Skip((queryParameters.PageNumber - 1) * queryParameters.PageSize)
             .Take(queryParameters.PageSize)
             .ToListAsync();
