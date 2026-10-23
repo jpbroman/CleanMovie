@@ -4,6 +4,7 @@ using CleanMovie.Data;
 using Microsoft.Data.Sqlite;
 using Xunit.Abstractions;
 
+namespace CleanMovie.Tests;
 
 public class MovieDbTests
 {
@@ -167,7 +168,7 @@ public class MovieDbTests
         var actor = new Actor
         {
             Name = "Keanu Reeves",
-            BirthDate = new DateTime(1964, 9, 2).ToString(),
+            BirthDate = "1964-09-02",
         };
 
         db.Actors.Add(actor);
@@ -186,6 +187,8 @@ public class MovieDbTests
         Assert.NotNull(retrievedMovieActor);
         Assert.Equal(movie.Id, retrievedMovieActor.MovieId);
         Assert.Equal(actor.Id, retrievedMovieActor.ActorId);
-        Assert.Equal("1964-09-02", actor.BirthDate);
+        var savedActor = await db.Actors.FindAsync(actor.Id);
+        Assert.NotNull(savedActor);
+        Assert.Equal("1964-09-02", savedActor.BirthDate);
     }  
 }
