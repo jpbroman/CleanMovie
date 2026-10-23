@@ -11,4 +11,7 @@ public interface IMovieService
     Task<MovieDto> CreateAsync(CreateMovieDto dto);
     Task UpdateAsync(int id, MovieDto dto);
     Task DeleteAsync(int id);
+
+    Task<DashboardReportDto> GetDashboardStatisticsAsync();
+
 }

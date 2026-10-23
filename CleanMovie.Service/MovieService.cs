@@ -75,7 +75,6 @@ public class MovieService : IMovieService
 
     public async Task UpdateAsync(int id, MovieDto dto)
     {
-        // 1. Hämta filmen från DB (Viktigt: Repositoryt måste köra .Include(m => m.MovieActors))
         var movie = await _unitOfWork.Movies.GetAsync(id);
 
         if (movie is null)
@@ -92,7 +91,7 @@ public class MovieService : IMovieService
             movie.MovieActors = new List<MovieActor>();
         }
 
-        // 3. FIXEN: Istället för att köra .Clear(), lägger vi bara till de nya som saknas
+        // 3.  Istället för att köra .Clear(), lägger vi bara till de nya som saknas
         if (dto.Actors != null)
         {
             foreach (var actorDto in dto.Actors)
@@ -128,4 +127,11 @@ public class MovieService : IMovieService
 
         await _unitOfWork.CompleteAsync();
     }
+
+    public async Task<DashboardReportDto> GetDashboardStatisticsAsync()
+    {
+        // Anropar repositoryt via Unit of Work och returnerar DTO:n till controllern
+        return await _unitOfWork.Movies.GetDashboardStatisticsAsync();
+    }
+
 }

@@ -1,4 +1,5 @@
 using CleanMovie.Core.Entities;
+using CleanMovie.Core.Entities.DTOs;
 namespace CleanMovie.Core.DomainContracts;
 
 public interface IMovieRepository
@@ -12,4 +13,6 @@ public interface IMovieRepository
     Task AddAsync(Movie movie);
     void Update(Movie movie);
     void Remove(Movie movie);
+    Task<DashboardReportDto> GetDashboardStatisticsAsync();
+
 }

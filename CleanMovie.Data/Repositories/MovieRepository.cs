@@ -80,4 +80,44 @@ public class MovieRepository : IMovieRepository
     {
         _context.Movies.Remove(movie);
     }
+
+    public async Task<DashboardReportDto> GetDashboardStatisticsAsync()
+    {
+        // A. Räkna ut genomsnittsbetyg per genre baserat på recensionerna
+        var genreData = await _context.Movies
+            .Include(m => m.Reviews)
+            .Where(m => m.Reviews != null && m.Reviews.Any())
+            .ToListAsync();
+
+        var topGenres = genreData
+            .Where(m => m.Reviews != null && m.Reviews.Any())
+            .GroupBy(m => m.Genre)
+            .Select(g => new GenreRatingDto(
+                g.Key,
+                Math.Round(
+                    g.SelectMany(m => m.Reviews ?? Enumerable.Empty<Review>())
+                     .Average(r => Convert.ToDouble(r.Rating)),
+                    1
+                )
+            ))
+            .OrderByDescending(g => g.AverageRating)
+            .Take(5) // Topp 5 genrer
+            .ToList();
+
+        // B. Räkna ut mest aktiva skådespelare baserat på kopplingstabellen MovieActors
+        var actorData = await _context.MovieActors
+            .Include(ma => ma.Actor)
+            .Where(ma => ma.Actor != null)
+            .ToListAsync();
+
+        var activeActors = actorData
+            .GroupBy(ma => ma.Actor.Name)
+            .Select(g => new ActorActivityDto(g.Key, g.Count()))
+            .OrderByDescending(g => g.MovieCount)
+            .Take(5) // Topp 5 skådespelare
+            .ToList();
+
+        return new DashboardReportDto(topGenres, activeActors);
+    }
+
 }
