@@ -1,9 +1,14 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Abstractions;
+using CleanMovie.API.Controllers;
 using CleanMovie.Core.Entities;
 using CleanMovie.Core.Entities.DTOs;
 using CleanMovie.Data;
 using CleanMovie.Data.Repositories;
+using CleanMovie.Data.Services;
 using CleanMovie.Service;
+using CleanMovie.Services;
 
 namespace CleanMovie.Tests;
 
@@ -22,16 +27,25 @@ public class MovieServiceUpdateTests
         return new MovieDbContext(options);
     }
 
-    private static MovieService CreateMovieService(MovieDbContext db)
-    {
-        var unitOfWork = new UnitOfWork(
-            db,
-            new MovieRepository(db),
-            new ReviewRepository(db),
-            new ActorRepository(db),
-            new MovieDetailsRepository(db));
+    private static UnitOfWork CreateUnitOfWork(MovieDbContext db) => new(
+        db,
+        new MovieRepository(db),
+        new ReviewRepository(db),
+        new ActorRepository(db),
+        new MovieDetailsRepository(db));
 
-        return new MovieService(unitOfWork);
+    private static MovieService CreateMovieService(MovieDbContext db) => new(CreateUnitOfWork(db));
+
+    private static MoviesController CreateController(MovieDbContext db)
+    {
+        var unitOfWork = CreateUnitOfWork(db);
+        var services = new ServiceManager(
+            new MovieService(unitOfWork),
+            new ActorService(unitOfWork),
+            new ReviewService(unitOfWork),
+            new MovieDetailService(unitOfWork));
+
+        return new MoviesController(services, NullLogger<MoviesController>.Instance);
     }
 
     private async Task UpdateAsync(int id, MovieDto dto)
@@ -176,5 +190,27 @@ public class MovieServiceUpdateTests
         Assert.Equal("Red pill or blue pill.", movie.Details.Synopsis);
         var review = Assert.Single(movie.Reviews!);
         Assert.Equal("Classic", review.Comment);
+    }
+
+    [Fact]
+    public async Task Controller_UnknownMovie_ReturnsNotFound()
+    {
+        await SeedAsync();
+        await using var db = CreateContext();
+
+        var result = await CreateController(db).Update(99, new MovieDto(99, "Missing", 2000, "Drama", 90));
+
+        Assert.IsType<NotFoundResult>(result);
+    }
+
+    [Fact]
+    public async Task Controller_ExistingMovie_ReturnsNoContent()
+    {
+        await SeedAsync();
+        await using var db = CreateContext();
+
+        var result = await CreateController(db).Update(1, new MovieDto(1, "The Matrix Reloaded", 2003, "Action", 138));
+
+        Assert.IsType<NoContentResult>(result);
     }
 }

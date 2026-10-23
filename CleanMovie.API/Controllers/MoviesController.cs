@@ -66,13 +66,20 @@ public class MoviesController : ControllerBase
     /// <summary>
     /// Update an existing movie..
     /// </summary>
-    [AllowAnonymous]
+    [Authorize(Roles = "Admin")]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> Update(int id, MovieDto dto)
     {
         _logger.LogInformation($"Updating movie {dto.Title}");
 
-        await _services.Movies.UpdateAsync(id, dto);
+        try
+        {
+            await _services.Movies.UpdateAsync(id, dto);
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound();
+        }
 
         return NoContent();
     }
@@ -80,7 +87,7 @@ public class MoviesController : ControllerBase
     /// <summary>
     /// Remove specified movie.
     /// </summary>
-    [AllowAnonymous]
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {
